@@ -1,0 +1,21 @@
+{
+  "test.html": [
+    {
+      "name": "Video 1",
+      "url": "https://drive.google.com/uc?export=download&id=1DNDEExZXrZ4m_Dl6oFRQ7DYZO_WR3dOr",
+      "hash": "video1"
+    },
+    {
+      "name": "Video 2",
+      "url": "https://drive.google.com/uc?export=download&id=19idZq4m2h3QrgSkYFS1B12wIM6ynGC2Q",
+      "hash": "video2"
+    }
+  ],
+  "sus.html": [
+    {
+      "name": "Video 3",
+      "url": "https://drive.google.com/uc?export=download&id=some_other_id",
+      "hash": "video3"
+    }
+  ]
+}
