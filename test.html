@@ -17,13 +17,13 @@
         function loadVideoByHash() {
             const currentPage = window.location.pathname.split("/").pop();  // Get the current filename (e.g., 'test.html')
             const hash = window.location.hash.substring(1);  // Get the hash, without the '#'
-            const videoPlayer = document.getElementById('videoPlayer');
-            const videoSource = document.getElementById('videoSource');
-            const videoList = document.getElementById('videoList');
-            
             fetch('links.json')
                 .then(response => response.json())
                 .then(data => {
+                    const videoList = document.getElementById('videoList');
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    const videoSource = document.getElementById('videoSource');
+                    
                     videoList.innerHTML = '';  // Clear the list before adding new items
                     
                     if (data[currentPage]) {
@@ -31,27 +31,15 @@
                             const button = document.createElement('button');
                             button.textContent = video.name;
                             button.onclick = () => {
-                                const savedTime = localStorage.getItem(`${currentPage}_${video.hash}`);
                                 videoSource.src = video.url;
                                 videoPlayer.load();
-
-                                if (savedTime) {
-                                    if (confirm(`Lanjutkan ke ${formatTime(savedTime)}?`)) {
-                                        videoPlayer.currentTime = savedTime;
-                                    }
-                                }
                             };
                             videoList.appendChild(button);
 
                             // Auto-select video if the hash matches
                             if (hash === video.hash) {
-                                const savedTime = localStorage.getItem(`${currentPage}_${video.hash}`);
                                 videoSource.src = video.url;
                                 videoPlayer.load();
-
-                                if (savedTime) {
-                                    videoPlayer.currentTime = savedTime;
-                                }
                             }
                         });
                     } else {
@@ -61,32 +49,9 @@
                 .catch(error => console.error('Error loading the JSON:', error));
         }
 
-        // Save the current time of the video when paused or ended
-        function saveCurrentTime() {
-            const currentPage = window.location.pathname.split("/").pop();
-            const hash = window.location.hash.substring(1);
-            const currentTime = document.getElementById('videoPlayer').currentTime;
-            if (hash) {
-                localStorage.setItem(`${currentPage}_${hash}`, currentTime);
-            }
-        }
-
-        // Format time to HH:MM:SS
-        function formatTime(seconds) {
-            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-            return `${h}:${m}:${s}`;
-        }
-
         // Load video based on hash in the URL
         window.addEventListener('hashchange', loadVideoByHash);
         window.onload = loadVideoByHash;
-
-        // Save current time on pause or when video ends
-        const videoPlayer = document.getElementById('videoPlayer');
-        videoPlayer.addEventListener('pause', saveCurrentTime);
-        videoPlayer.addEventListener('ended', saveCurrentTime);
     </script>
 </body>
 </html>
