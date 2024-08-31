@@ -3,19 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player</title>
+    <title>Test Video Player</title>
+    <style>
+        /* Overlay container */
+        #overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+
+        /* Video list in overlay */
+        #overlay ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #overlay ul li {
+            margin: 5px 0;
+        }
+
+        #overlay ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        #overlay ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Video Player</h1>
-    <div id="videoList"></div>
+    <h1>Test Video Player</h1>
+    <div id="overlay">
+        <ul id="videoList"></ul>
+    </div>
     <video id="videoPlayer" width="640" height="480" controls>
         <source id="videoSource" src="" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
     <script>
+        const category = 'test.html';  // Manually specify the category here
+
         function loadVideoByHash() {
-            const currentPage = window.location.pathname.split("/").pop();  // Get the current filename (e.g., 'test.html')
             const hash = window.location.hash.substring(1);  // Get the hash, without the '#'
             fetch('links.json')
                 .then(response => response.json())
@@ -23,18 +59,18 @@
                     const videoList = document.getElementById('videoList');
                     const videoPlayer = document.getElementById('videoPlayer');
                     const videoSource = document.getElementById('videoSource');
-                    
+
                     videoList.innerHTML = '';  // Clear the list before adding new items
                     
-                    if (data[currentPage]) {
-                        data[currentPage].forEach(video => {
-                            const button = document.createElement('button');
-                            button.textContent = video.name;
-                            button.onclick = () => {
-                                videoSource.src = video.url;
-                                videoPlayer.load();
-                            };
-                            videoList.appendChild(button);
+                    if (data[category]) {
+                        data[category].forEach(video => {
+                            // Create list item with link
+                            const li = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.textContent = video.name;
+                            link.href = `#${video.hash}`;
+                            li.appendChild(link);
+                            videoList.appendChild(li);
 
                             // Auto-select video if the hash matches
                             if (hash === video.hash) {
